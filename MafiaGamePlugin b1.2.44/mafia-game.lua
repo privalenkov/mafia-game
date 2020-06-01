@@ -25,9 +25,6 @@ function getRandomCard(CountCard)
 		table.insert(RandNum, i)
 	end
 	shuffle(RandNum)
-	for i = 1, #RandNum do
-		print(RandNum[i])
-	end
 end
 
 --Функция Shuffle рандомно переставляет значения в указанном массиве 
@@ -135,7 +132,6 @@ end
 -- задает изображения по индексу
 function set_image()
 	local text;
-	print(ElemCurrent)
 	text = RandNum[ElemCurrent];
 	if (ElemCurrent > #RandNum) then
 		ElemCurrent = 0
