@@ -2,6 +2,7 @@ obs           = obslua
 bit = require("bit")
 ElemCurrent = 0;
 CountCard = 11;
+ImgType = ".png"
 RandNum = {}
 
 source_name = 'MafiaCards'
@@ -72,7 +73,7 @@ end
 -- при создании источника задает изображение
 source_def.create = function(source, settings)
 	data.image = obs.gs_image_file()
-	image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
+	image_source_load(data.image, script_path() .. "mafia-cards/card_main" .. ImgType)
 	return data
 end
 
@@ -118,7 +119,7 @@ source_def.get_height = function(data)
 end
 
 source_def.activate = function(data)
-	image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
+	image_source_load(data.image, script_path() .. "mafia-cards/card_main" .. ImgType)
 	if(ElemCurrent < #RandNum) then
 		obs.timer_add(set_image, 650)
 	end
@@ -135,10 +136,10 @@ function set_image()
 	text = RandNum[ElemCurrent]
 	if ElemCurrent > #RandNum then
 		RandNum = {}
-		image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
+		image_source_load(data.image, script_path() .. "mafia-cards/card_main" .. ImgType)
 		obs.remove_current_callback()
 	else
-		image_source_load(data.image, script_path() .. "mafia-cards/" .. tostring(text) .. ".png")
+		image_source_load(data.image, script_path() .. "mafia-cards/" .. tostring(text) .. ImgType)
 		obs.remove_current_callback()
 	end
 	obs.remove_current_callback()
@@ -163,7 +164,7 @@ end
 
 -- фунция загрузки изображения для кнопки
 function imgload()
-	image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
+	image_source_load(data.image, script_path() .. "mafia-cards/card_main" .. ImgType)
 	obs.remove_current_callback(imgload)
 end
 
@@ -191,8 +192,9 @@ end
 function script_properties()
 	local props = obs.obs_properties_create()
 	obs.obs_properties_add_int_slider(props, "cardcount", "Количество карт", 1, 20, 1)
-	
-
+	local p = obs.obs_properties_add_list(props, "imgtype", "Формат изображений", obs.OBS_COMBO_TYPE_LIST, obs.OBS_COMBO_FORMAT_STRING)
+	obs.obs_property_list_add_string(p, 'PNG', '.png')
+	obs.obs_property_list_add_string(p, 'JPG', '.jpg')
 	obs.obs_properties_add_button(props, "reset_button", "Перемешать карты", reset_button_clicked)
 	return props
 end
@@ -205,6 +207,7 @@ end
 -- функция, которая вызывается после изменения настроек
 function script_update(settings)
 	CountCard = obs.obs_data_get_int(settings, "cardcount")
+	ImgType = obs.obs_data_get_string(settings, "imgtype")
 end
 
 -- стандартные настройки
