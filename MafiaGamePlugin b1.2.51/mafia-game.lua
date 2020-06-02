@@ -25,10 +25,6 @@ function getRandomCard(CountCard)
 		table.insert(RandNum, i)
 	end
 	shuffle(RandNum)
-	print("###############")
-	for i = 1, #RandNum do
-		print(RandNum[i])
-	end
 end
 
 --Функция Shuffle рандомно переставляет значения в указанном массиве 
@@ -122,9 +118,6 @@ source_def.get_height = function(data)
 end
 
 source_def.activate = function(data)
-	-- if ElemCurrent ~= 0 then
-	-- 	set_image()
-	-- end
 	image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
 	if(ElemCurrent < #RandNum) then
 		obs.timer_add(set_image, 650)
@@ -138,12 +131,8 @@ end
 -- задает изображения по индексу
 function set_image()
 	local text;
-	-- if (ElemCurrent > #RandNum) then
-	-- 	obs.remove_current_callback()
-	-- end
 	ElemCurrent = ElemCurrent + 1
-	text = RandNum[ElemCurrent];
-	print(text .. " : " .. tostring(text) .. " :: " .. ElemCurrent)
+	text = RandNum[ElemCurrent]
 	if ElemCurrent > #RandNum then
 		RandNum = {}
 		image_source_load(data.image, script_path() .. "mafia-cards/card_main.png")
@@ -154,13 +143,6 @@ function set_image()
 	end
 	obs.remove_current_callback()
 end
-
--- function timer_callback()
-
--- 	obs.remove_current_callback()
--- 	set_image()
--- end
-
 
 -- функция на кнопку перемешивания карт
 function reset(pressed)
