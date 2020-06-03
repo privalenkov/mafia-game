@@ -1,13 +1,17 @@
 obs           = obslua
 bit = require("bit")
-ElemCurrent = 0;
-CountCard = 11;
-ImgType = ".png"
-RandNum = {}
-
 source_name = 'MafiaCards'
-data = {}
 
+
+CountCard = 11
+ImgType = ".png"
+SpeedShow = 0.5
+
+RandNum = {}
+ElemCurrent = 0
+
+
+data = {}
 img_size_w = 0
 img_size_h = 0
 
@@ -121,7 +125,7 @@ end
 source_def.activate = function(data)
 	image_source_load(data.image, script_path() .. "mafia-cards/card_main" .. ImgType)
 	if(ElemCurrent < #RandNum) then
-		obs.timer_add(set_image, 650)
+		obs.timer_add(set_image, SpeedShow * 1000)
 	end
 end
 
@@ -192,6 +196,7 @@ end
 function script_properties()
 	local props = obs.obs_properties_create()
 	obs.obs_properties_add_int_slider(props, "cardcount", "Количество карт", 1, 20, 1)
+	obs.obs_properties_add_float_slider(props, "speedshow", "Скорость отображения", 0.5, 5, 0.1) 
 	local p = obs.obs_properties_add_list(props, "imgtype", "Формат изображений", obs.OBS_COMBO_TYPE_LIST, obs.OBS_COMBO_FORMAT_STRING)
 	obs.obs_property_list_add_string(p, 'PNG', '.png')
 	obs.obs_property_list_add_string(p, 'JPG', '.jpg')
@@ -207,12 +212,15 @@ end
 -- функция, которая вызывается после изменения настроек
 function script_update(settings)
 	CountCard = obs.obs_data_get_int(settings, "cardcount")
+	SpeedShow = obs.obs_data_get_double(settings, "speedshow")
 	ImgType = obs.obs_data_get_string(settings, "imgtype")
 end
 
 -- стандартные настройки
 function script_defaults(settings)
 	obs.obs_data_set_default_int(settings, "cardcount", 11)
+	obs.obs_data_set_default_double(settings, "speedshow", 0.5)
+	-- obs.obs_data_set_default_string(settings, "cardcount", "PNG")
 end
 
 -- функция вызывается, когда скрипт сохраняется
